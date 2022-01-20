@@ -16,7 +16,7 @@ public class CamController : MonoBehaviour
             mainCam.SetActive(false);
             break;
 
-            default:
+            case "Running":
             camPause.SetActive(false);
             mainCam.SetActive(true);
             break;

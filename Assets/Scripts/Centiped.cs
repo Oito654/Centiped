@@ -9,16 +9,12 @@ public class Centiped : MonoBehaviour
     public Food resetFoodPosition;
     public int initalSize = 3;
     public ScoreManager score;
-    public GameObject pauseMenu;
-    public GameObject mainCam;
-    public GameObject camPause;
-    public bool isPaused = true;
+    public PauseController pauseController;
+    private bool isPaused = true;
 
     private void Start() {
         ResetState();
-        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         isPaused = false;
-        PauseMenuController(isPaused);
     }
 
     private void Update() 
@@ -44,13 +40,15 @@ public class Centiped : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.P))
         {
-            if(!isPaused)
+            if(isPaused)
             {
-                PauseGame();
-            } 
-            else 
+                pauseController.UnPauseGame();
+                isPaused = false;
+            }
+            else
             {
-                UnPauseGame();    
+                pauseController.PauseGame();
+                isPaused = true;
             }
         }
          
@@ -108,36 +106,6 @@ public class Centiped : MonoBehaviour
             Grow();
         if(other.tag == "Obstacle")
             ResetState();
-    }
-
-    private void PauseGame()
-    {
-        Time.timeScale = 0;
-        isPaused = true;
-        PauseMenuController(isPaused);
-    }
-
-    private void UnPauseGame()
-    {
-        Time.timeScale = 1;
-        isPaused = false;
-        PauseMenuController(isPaused);
-    }
-
-    public void PauseMenuController(bool isPaused)
-    {
-        if(isPaused == true)
-        {
-            pauseMenu.SetActive(true);
-            camPause.SetActive(true);
-            mainCam.SetActive(false);
-        }
-        else
-        {
-            pauseMenu.SetActive(false);
-            camPause.SetActive(false);
-            mainCam.SetActive(true);
-        }
     }
 
 }

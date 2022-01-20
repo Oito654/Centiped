@@ -4,44 +4,23 @@ using UnityEngine;
 
 public class PauseController : MonoBehaviour
 {
-    public bool isPaused = false;
     public GameObject pauseMenu;
     public CamController camController;
-    public void Start()
+    private void Start()
     {
         pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
-        isPaused = false;
-        PauseMenuController(isPaused);
+        UnPauseGame();
     }
 
-    private void PauseGame()
+    public void PauseGame()
     {
         Time.timeScale = 0;
-        isPaused = true;
-        PauseMenuController(isPaused);
+        camController.CamSwitch("Pause");
     }
 
-    private void UnPauseGame()
+    public void UnPauseGame()
     {
         Time.timeScale = 1;
-        isPaused = false;
-        PauseMenuController(isPaused);
-    }
-
-    // public bool GetIsPaused()
-    // {
-
-    // }
-
-    public void PauseMenuController(bool isPaused)
-    {
-        if (isPaused == true)
-        {
-            pauseMenu.SetActive(true);
-        }
-        else
-        {
-            pauseMenu.SetActive(false);
-        }
+        camController.CamSwitch("Running");
     }
 }
