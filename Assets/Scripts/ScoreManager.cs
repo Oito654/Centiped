@@ -7,6 +7,8 @@ public class ScoreManager : MonoBehaviour
 {
 
     public Text scoreText;
+    public Text deathScoreText;
+    public Text pauseScoreText;
     // public Text highscoreText;
 
     float score = 0;
@@ -16,7 +18,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        scoreText.text = string.Format("SCORE: {0:00000}", displayScore);
+        scoreText.text = string.Format("SCORE:{0:00005}", displayScore);
     }
 
     private void Update()
@@ -27,7 +29,9 @@ public class ScoreManager : MonoBehaviour
 
     public void UpdateScoreDisplay()
     {
-        scoreText.text = string.Format("SCORE: {0:00000}", displayScore);
+        scoreText.text = string.Format("SCORE:{0:00000}", displayScore);
+        pauseScoreText.text = scoreText.text;
+        deathScoreText.text = scoreText.text;
     }
 
     public void AddScore() 

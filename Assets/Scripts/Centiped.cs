@@ -6,15 +6,17 @@ public class Centiped : MonoBehaviour
     private Vector2 _direction = Vector2.right;
     private List<Transform> _segments = new List<Transform>();
     public Transform segmentPrefab;
-    public Food resetFoodPosition;
     public int initalSize = 3;
     public ScoreManager score;
     public PauseController pauseController;
+    public GameOverController gameOverController;
     private bool isPaused = true;
+    private bool gameOver = true;
 
     private void Start() {
-        ResetState();
+        gameOverController.Restart(_segments, initalSize, segmentPrefab, score);
         isPaused = false;
+        gameOver = false;
     }
 
     private void Update() 
@@ -51,6 +53,15 @@ public class Centiped : MonoBehaviour
                 isPaused = true;
             }
         }
+        if(gameOver)
+        {
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                gameOver = false;
+                gameOverController.Restart(_segments, initalSize, segmentPrefab, score);
+            }
+        }
+
          
     }
 
@@ -78,34 +89,37 @@ public class Centiped : MonoBehaviour
        score.AddScore();
     }
 
-    private void ResetState()
-    {
-        for(int i = 1; i < _segments.Count; i++)
-        {
-            Destroy(_segments[i].gameObject);
-        }
+    // private void ResetState()
+    // {
+    //     for(int i = 1; i < _segments.Count; i++)
+    //     {
+    //         Destroy(_segments[i].gameObject);
+    //     }
 
-        _segments.Clear();
-        _segments.Add(this.transform);
+    //     _segments.Clear();
+    //     _segments.Add(this.transform);
 
-        for(int i = 1; i < this.initalSize; i++)
-        {
-            _segments.Add(Instantiate(this.segmentPrefab));
-        }
+    //     for(int i = 1; i < this.initalSize; i++)
+    //     {
+    //         _segments.Add(Instantiate(this.segmentPrefab));
+    //     }
 
-        score.ResetScore();
+    //     score.ResetScore();
 
-        resetFoodPosition.RandomizePosition();
+    //     resetFoodPosition.RandomizePosition();
 
-        this.transform.position = Vector3.zero;
-    }
+    //     this.transform.position = Vector3.zero;
+    // }
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if(other.tag == "Food")
             Grow();
         if(other.tag == "Obstacle")
-            ResetState();
+        {
+            gameOver = true;
+            gameOverController.GameOver();
+        }
     }
 
 }

@@ -8,7 +8,6 @@ public class PauseController : MonoBehaviour
     public CamController camController;
     private void Start()
     {
-        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         UnPauseGame();
     }
 
