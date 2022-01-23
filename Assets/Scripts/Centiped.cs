@@ -8,67 +8,55 @@ public class Centiped : MonoBehaviour
     public Transform segmentPrefab;
     public int initalSize = 3;
     public ScoreManager score;
-    public PauseController pauseController;
     public GameOverController gameOverController;
-    private bool isPaused = true;
     private bool gameOver = true;
 
-    private void Start() {
+    private void Start()
+    {
         gameOverController.Restart(_segments, initalSize, segmentPrefab, score);
-        isPaused = false;
         gameOver = false;
     }
 
-    private void Update() 
+    private void Update()
     {
-        if(!isPaused)
+        if (this._direction.x != 0f)
         {
-            if (this._direction.x != 0f)
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
-                    this._direction = Vector2.up;
-                } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
-                    this._direction = Vector2.down;
-                }
+                this._direction = Vector2.up;
             }
-            else if (this._direction.y != 0f)
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
-                    this._direction = Vector2.right;
-                } else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-                    this._direction = Vector2.left;
-                }
+                this._direction = Vector2.down;
             }
         }
-        if(Input.GetKeyDown(KeyCode.P))
+        else if (this._direction.y != 0f)
         {
-            if(isPaused)
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                pauseController.UnPauseGame();
-                isPaused = false;
+                this._direction = Vector2.right;
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                pauseController.PauseGame();
-                isPaused = true;
+                this._direction = Vector2.left;
             }
         }
-        if(gameOver)
+        if (gameOver)
         {
-            if(Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 gameOver = false;
                 gameOverController.Restart(_segments, initalSize, segmentPrefab, score);
             }
         }
 
-         
+
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
 
-        for(int i = _segments.Count - 1; i > 0; i--)
+        for (int i = _segments.Count - 1; i > 0; i--)
         {
             _segments[i].position = _segments[i - 1].position;
         }
@@ -82,40 +70,18 @@ public class Centiped : MonoBehaviour
 
     private void Grow()
     {
-       Transform segment = Instantiate(this.segmentPrefab);
-       segment.position = _segments[ _segments.Count - 1].position;
+        Transform segment = Instantiate(this.segmentPrefab);
+        segment.position = _segments[_segments.Count - 1].position;
 
-       _segments.Add(segment);
-       score.AddScore();
+        _segments.Add(segment);
+        score.AddScore();
     }
 
-    // private void ResetState()
-    // {
-    //     for(int i = 1; i < _segments.Count; i++)
-    //     {
-    //         Destroy(_segments[i].gameObject);
-    //     }
-
-    //     _segments.Clear();
-    //     _segments.Add(this.transform);
-
-    //     for(int i = 1; i < this.initalSize; i++)
-    //     {
-    //         _segments.Add(Instantiate(this.segmentPrefab));
-    //     }
-
-    //     score.ResetScore();
-
-    //     resetFoodPosition.RandomizePosition();
-
-    //     this.transform.position = Vector3.zero;
-    // }
-
-    private void OnTriggerEnter2D(Collider2D other) 
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Food")
+        if (other.tag == "Food")
             Grow();
-        if(other.tag == "Obstacle")
+        if (other.tag == "Obstacle")
         {
             gameOver = true;
             gameOverController.GameOver();
