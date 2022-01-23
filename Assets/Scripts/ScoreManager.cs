@@ -11,7 +11,7 @@ public class ScoreManager : MonoBehaviour
     public Text pauseScoreText;
     // public Text highscoreText;
 
-    float score = 0;
+    public float score = 0;
     float highScore;
     public float transitionSpeed = 70;
     float displayScore;

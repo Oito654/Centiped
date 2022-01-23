@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class HighScores : MonoBehaviour
 {
-public HighScoreDisplay[] highScoreDisplayArray;
+    public HighScoreDisplay[] highScoreDisplayArray;
+
     List<HighScoreEntry> scores = new List<HighScoreEntry>();
 
     void Start()
     {
-        // Data Test
-        AddNewScore("Oito", 500);
-        AddNewScore("Kocz", 420);
-        AddNewScore("Bist", 380);
-        AddNewScore("Chim", 69);
-        AddNewScore("Arch", 250);
+        List<HighScoreEntry> xmlScores = XMLController.instance.LoadScores();
+
+        foreach(HighScoreEntry score in xmlScores)
+        {
+            AddNewScore(score.name, score.score);
+        }
 
         UpdateDisplay();
     }
@@ -36,8 +37,29 @@ public HighScoreDisplay[] highScoreDisplayArray;
         }
     }
 
-    void AddNewScore(string entryName, int entryScore)
+    public void AddNewScore(string entryName, int entryScore)
     {
-        scores.Add(new HighScoreEntry { name = entryName, score = entryScore });
+        scores.Add(new HighScoreEntry { name = entryName, score = entryScore }); 
+    }
+
+    public void SaveNewScore(string name, int score)
+    {
+        AddNewScore(name,score);
+        List<HighScoreEntry> scoreToAdd = new List<HighScoreEntry>();
+        scoreToAdd.AddRange(scores);
+        int scoresEntrysIndex = 0;
+        
+        for(int i = scoreToAdd.Count; i > 0; i-- )
+        {
+            scoresEntrysIndex++;
+        }
+
+        if(scoresEntrysIndex >= 6)
+        {
+            scoreToAdd.Sort((HighScoreEntry x, HighScoreEntry y) => y.score.CompareTo(x.score));
+            scoreToAdd.RemoveAt(5);
+        }
+
+        XMLController.instance.SaveScores(scoreToAdd);   
     }
 }

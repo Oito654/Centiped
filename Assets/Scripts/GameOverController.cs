@@ -7,10 +7,11 @@ public class GameOverController : MonoBehaviour
     public CamController camController;
     public Centiped centiped;
     public Food resetFoodPosition;
-
+    public HighScores highScores;
     public void GameOver()
     {
         Time.timeScale = 0;
+        highScores.SaveNewScore(ScoreName.instance.nameSet, (int)centiped.score.score);
         camController.CamSwitch("GameOver");
     }
 
